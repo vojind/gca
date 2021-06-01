@@ -20,7 +20,7 @@ tweakHistogramData <- function(df){
 #' @title plots incidence and mortality
 #' @description plots histogram for each federal state. x-variable is agegroup and y-variable is
 #' incidence- and mortality rate
-#' @param df
+#' @param df dataframe
 histogramPlotter <- function(df){
   library(geofacet)
   ggplot(df, aes(agegroup, total, fill=event))+

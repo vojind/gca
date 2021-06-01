@@ -4,73 +4,73 @@ NULL
 
 #' @title summing over groups, specific for geoAnalysis plot
 #' @param df dataframe
-#' @param varx x-variable
-#' @param vary y-variable
-sumOverGroups <- function(df,varx,vary){
-  if(varx=="period"){
-    result <- dplyr::summarise(dplyr::group_by(df,
-                                               varx = !!rlang::sym(varx),
-                                               FedState = FedState,
-                                               available,
-                                               complete),
-                               vary = sum(!!rlang::sym(vary)),
-                               population =sum(population))}
-  else{
-    result <- dplyr::summarise(dplyr::group_by(df,
-                                               varx = !!rlang::sym(varx),
-                                               FedState = FedState),
-                               vary = sum(!!rlang::sym(vary)),
-                               population =sum(population))}
-
+sumOverGroups <- function(df){
+  result <- dplyr::summarise(dplyr::group_by(df,
+                                             period = period,
+                                             FedState = FedState,
+                                             available,
+                                             complete),
+                             incidence = sum(incidence),
+                             mortality = sum(mortality),
+                             population =sum(population))
   result <- subset(result, FedState != 'Münster')
-  result$varyPerCapita <- as.integer(with(result, vary * (1e5/population)))
-  result <<- result
-  return(result)
+  result$incPer100k <- as.integer(with(result, incidence * (1e5/population)))
+  result$mortPer100k <- as.integer(with(result, mortality * (1e5/population)))
+  return(as.data.frame(result))
 }
-
-#' @title display plots arranged as Germany
-#' @description display incidence or mortality for each state, arranged as germany.
+#' @title display incidence plots arranged as Germany
+#' @description display incidence for each state, arranged as germany.
 #' @param df dataframe
-#' @param varxString x-variable, used for xlabel
-#' @param varyString y-variable, used for ylabel
 #' @export
-plotter <- function(df, varxString, varyString){
+plotGeoInc <- function(df){
   library(geofacet)
-  ggplot(df, aes(varx, varyPerCapita, group = 1))+
-    geom_point() +
-    (if(is.null(df$complete)) geom_point(color=3) else geom_point(color = (1 + df$available + df$complete))) +
-    geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name') +
-    ggtitle("German Cancer Data") +
-    ylab(sprintf("%s per 100 k",varyString))+
-    xlab(sprintf("%s", varxString)) +
-    theme(strip.text.x = element_text(size = 6), plot.title = element_text(hjust = 0.5))
+  ggplot(df, aes(period, incPer100k, group = 1))+
+    geom_point(aes(color=df$complete)) +
+    geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name')+
+    ggtitle("Incidence") +
+    theme(strip.text.x = element_text(size = 12))+
+    ylab(sprintf("%s per 100 k","Incidence"))+
+    xlab(sprintf("%s", "period"))+
+    labs(color="complete")
 }
 
-geoAnalysisUI <- function(id) {
+#' @title display mortality plots arranged as Germany
+#' @description display incidence for each state, arranged as germany.
+#' @param df dataframe
+#' @export
+plotGeoMort <- function(df){
+  library(geofacet)
+  ggplot(df, aes(period, mortPer100k, group = 1))+
+    geom_point(aes(color=df$complete)) +
+    geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name') +
+    ggtitle("Mortality") +
+    theme(strip.text.x = element_text(size = 12)) +
+    ylab(sprintf("%s per 100 k","mortality")) +
+    xlab(sprintf("%s", "period")) +
+    labs(color="complete")
+}
 
+##-------------------------------------module---------------------------------##
+geoAnalysisUI <- function(id) {
   fluidPage(
     fluidRow(
-      column(width=4,
+      column(width=8,
              selectInput(NS(id,"vary"),
                 "Select a y-variable",
-                choices=c("incidence","mortality","population"))),
-      column(width=4,
-             selectInput(NS(id,"varx"),
-                "Select a x-variable",
-                choices=c("period","agegroup"))),
+                choices=c("incidence","mortality"))),
       column(width=4, align='right',
            htmlOutput(NS(id,"hei")))),
-
-    plotOutput(NS(id,"geo"))
+    plotOutput(NS(id,"inc")),
+    plotOutput(NS(id,"mort"))
   )
 }
-
 
 geoAnalysisServer <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
-      sumOverGroups(data(),input$varx,input$vary))
-    output$geo <- renderPlot(plotter(df(), input$varx, input$vary))
+      sumOverGroups(data()))
+    output$inc <- renderPlot(plotGeoInc(df()))
+    output$mort <- renderPlot(plotGeoMort(df()))
   })
 }

@@ -4,14 +4,10 @@
 \alias{sumOverGroups}
 \title{summing over groups, specific for geoAnalysis plot}
 \usage{
-sumOverGroups(df, varx, vary)
+sumOverGroups(df)
 }
 \arguments{
 \item{df}{dataframe}
-
-\item{varx}{x-variable}
-
-\item{vary}{y-variable}
 }
 \description{
 summing over groups, specific for geoAnalysis plot
