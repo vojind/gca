@@ -79,9 +79,13 @@ cohortPlotUI <- function(id) {
     c("ALL","BB","BE","BW","BY","HB","HE","HH","MV",
       "NI","NW","RP","SH","SL","SN","ST","TH")
   fluidPage(
-    selectInput(NS(id,"state"),
-                "Select a state",
-                choices=states),
+    fluidRow(
+    column(width=6,
+           selectInput(NS(id,"state"),
+                       "Select a state",
+                       choices=states)),
+    column(width=6, align='right',
+           htmlOutput(NS(id,"hei")))),
     plotOutput(NS(id,"inc")),
     plotOutput(NS(id,"mort"))
   )
@@ -90,6 +94,7 @@ cohortPlotUI <- function(id) {
 
 cohortPlotServer <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+    output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
       tweakCohortData(data(),input$state))
     output$inc <- renderPlot(plotCohortInc(df()))

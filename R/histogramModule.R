@@ -21,23 +21,30 @@ tweakHistogramData <- function(df){
 #' @description plots histogram for each federal state. x-variable is agegroup and y-variable is
 #' incidence- and mortality rate
 #' @param df
-histogramPlotter <- function(df)
+histogramPlotter <- function(df){
+  library(geofacet)
   ggplot(df, aes(agegroup, total, fill=event))+
     geom_bar(stat = "identity", position = 'dodge')+
-    geofacet::facet_geo(~ FedState, grid = "de_states_grid1", label='name') +
+    geofacet::facet_geo(~ FedState, grid = geofacet::de_states_grid1, label='name') +
     scale_x_discrete(guide = guide_axis(check.overlap=T)) +
     scale_color_manual(labels = c("incidence", "mortality"), values = c("blue", "red"))+
     ylab(sprintf("%s per 100 k","rate"))+
     xlab(sprintf("%s", "age group")) +
     theme(legend.title = element_blank())
+}
 
 ##----------------------module-----------------------
 histogramPlotUI <- function(id) {
-    plotOutput(NS(id,"plot"))
+  fluidPage(
+    fluidRow(
+      column(width=12, align='right',
+           htmlOutput(NS(id,"hei")))),
+    plotOutput(NS(id,"plot")))
 }
 
 histogramPlotServer <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+    output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
       tweakHistogramData(data()))
     output$plot <- renderPlot(histogramPlotter(df()))

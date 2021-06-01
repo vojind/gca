@@ -18,7 +18,9 @@ dataChoiceUI <- function(id) {
 #' @return a dataframe for further use
 dataChoiceServer <- function(id) {
   moduleServer(id, function(input, output, session) {
+    choice <<- reactive(input$dataOld)
     dataOld <- reactive(removeNans(cancerData[[input$dataOld]][[1]]))
+
     #dataUpload <-
     #  eventReactive(input$submit,{
     #    total <- removeNans(cleanAndCombine(input$upload1$datapath,

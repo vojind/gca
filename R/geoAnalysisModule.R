@@ -35,10 +35,11 @@ sumOverGroups <- function(df,varx,vary){
 #' @param varyString y-variable, used for ylabel
 #' @export
 plotter <- function(df, varxString, varyString){
+  library(geofacet)
   ggplot(df, aes(varx, varyPerCapita, group = 1))+
     geom_point() +
     (if(is.null(df$complete)) geom_point(color=3) else geom_point(color = (1 + df$available + df$complete))) +
-    geofacet::facet_geo(~ FedState, grid = "de_states_grid1", label='name') +
+    geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name') +
     ggtitle("German Cancer Data") +
     ylab(sprintf("%s per 100 k",varyString))+
     xlab(sprintf("%s", varxString)) +
@@ -46,26 +47,28 @@ plotter <- function(df, varxString, varyString){
 }
 
 geoAnalysisUI <- function(id) {
-  sidebarLayout(
-    sidebarPanel(
-      selectInput(NS(id,"vary"),
+
+  fluidPage(
+    fluidRow(
+      column(width=4,
+             selectInput(NS(id,"vary"),
                 "Select a y-variable",
-                choices=c("incidence","mortality","population")),
-
-      selectInput(NS(id,"varx"),
+                choices=c("incidence","mortality","population"))),
+      column(width=4,
+             selectInput(NS(id,"varx"),
                 "Select a x-variable",
-                choices=c("period","agegroup")),
-      width = 3),
+                choices=c("period","agegroup"))),
+      column(width=4, align='right',
+           htmlOutput(NS(id,"hei")))),
 
-    mainPanel(plotOutput(NS(id,"geo")), width = 9),
-    position = c("left", "right"),
-    fluid = TRUE
+    plotOutput(NS(id,"geo"))
   )
 }
 
 
 geoAnalysisServer <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+    output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
       sumOverGroups(data(),input$varx,input$vary))
     output$geo <- renderPlot(plotter(df(), input$varx, input$vary))
