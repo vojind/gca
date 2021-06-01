@@ -10,7 +10,8 @@ gcaApp <- function(){
                      tabPanel("geographic analysis", geoAnalysisUI("tab2")),
                      tabPanel("cohort analysis", cohortPlotUI("tab3")),
                      tabPanel("agegroup analysis", AgeGroupPlotUI("tab4")),
-                     tabPanel("agegroup histograms", histogramPlotUI("tab5")))
+                     tabPanel("agegroup histograms", histogramPlotUI("tab5")),
+                     tabPanel("age standardized analysis",asisPlotUI("tab6")))
 
         server <- function(input, output, session) {
         data <- dataChoiceServer("tab0")
@@ -19,6 +20,7 @@ gcaApp <- function(){
         cohortPlotServer("tab3", data)
         AgeGroupPlotServer("tab4", data)
         histogramPlotServer("tab5",data)
+        asisPlotServer("tab6",data)
 
     }
 

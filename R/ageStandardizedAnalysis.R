@@ -48,6 +48,7 @@ plotAsis <- function(df){
     geom_line(aes(y=newIncRate, colour='incidence rate')) +
     geom_line(aes(y=newMortRate, colour='mortality rate')) +
     theme_bw() +
+    theme(legend.title = element_blank()) +
     ylab('Age standardized rates per 100,000 persons') +
     xlab('period')
 }
