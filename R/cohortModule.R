@@ -22,7 +22,7 @@ tweakCohortData <- function(data, fstate){
   years <- getCompleteYears(fstate)
   df <- prepareData(data, fstate)
   df <- subset(df, years[1] <= period & period <= years[2])
-  #df <- subset(df, FedState %in% c("SH","HH","HB","SL","BB","MV","SN","TH"))
+  #df <- subset(df, FedState %in% completeStates)
   df$age           <- as.factor(sapply(df$agegroup, FUN=convertInterval))
   df$birthYear     <- df$period - as.integer(as.character(df$age))
   return(df)}
@@ -38,7 +38,9 @@ plotCohortInc <- function(df){
     theme_bw() +
     ylab('Incidence rate per 100,000 persons') +
     xlab('Year of Birth') +
+    xlim(1915,1965)+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
+
   two <-
     ggplot(df, aes(period, y=incPer100k, colour=age)) +
     geom_line() +
@@ -59,6 +61,7 @@ plotCohortMort <- function(df){
     theme_bw() +
     ylab('Mortality rate per 100,000 persons') +
     xlab('Year of Birth')+
+    xlim(1915,1965)+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
 
   four <-
@@ -86,7 +89,9 @@ cohortPlotUI <- function(id) {
                        choices=states)),
     column(width=6, align='right',
            htmlOutput(NS(id,"hei")))),
+    fluidRow(downloadButton(NS(id, 'downloadInc'),'Download Incidence Plot')),
     plotOutput(NS(id,"inc")),
+    fluidRow(downloadButton(NS(id, 'downloadMort'),'Download Mortality Plot')),
     plotOutput(NS(id,"mort"))
   )
 }
@@ -97,7 +102,20 @@ cohortPlotServer <- function(id, data) {
     output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
       tweakCohortData(data(),input$state))
-    output$inc <- renderPlot(plotCohortInc(df()))
-    output$mort <- renderPlot(plotCohortMort(df()))
+
+    incplott  <- reactive(plotCohortInc(df()))
+    mortplott <- reactive(plotCohortMort(df()))
+
+    output$inc <- renderPlot(incplott())
+    output$mort <- renderPlot(mortplott())
+
+    output$downloadInc <- downloadHandler(
+      filename = function(){'cohortInc.pdf'},
+      content = function(file){ggsave(file, plot=incplott(), width=12, height=6, units="in")}
+    )
+    output$downloadMort <- downloadHandler(
+      filename = function(){'cohortMort.pdf'},
+      content = function(file){ggsave(file, plot=mortplott(), width=12, height=6, units="in")}
+    )
   })
-}
+  }

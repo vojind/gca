@@ -11,7 +11,7 @@ plotAgGrid <- function(df, fstate){
     facet_wrap(~agegroup) +
     theme(legend.title = element_blank()) +
     ylab('Rate per 100,000 persons') +
-    if(fstate != "ALL") geom_vline(xintercept=getCompleteYears(fstate), linetype=2)
+    geom_vline(xintercept=getCompleteYears(fstate), linetype=2)
 }
 
 #' @title plot age group plot

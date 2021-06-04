@@ -1,3 +1,8 @@
+#' @title complete states
+#' @description when aggregating data over states, only these states are used.
+#' These have complete data from 2001 to 2014.
+completeStates <<- c("SH","HH","HB","SL","BB","MV","SN","TH")
+
 #' @title Removing NaN values
 #' @description Nans in the complete/available columns are set to FALSE.
 #' @param df The data frame whose Nan values are set to False
@@ -23,6 +28,7 @@ prepareData <- function(df, fstate = "ALL"){
     df <- subset(df, FedState == fstate)
   }
   else{
+    df <- subset(df, FedState %in% completeStates)
     df <- dplyr::summarise(dplyr::group_by(df,
                              agegroup = agegroup,
                              period = period),

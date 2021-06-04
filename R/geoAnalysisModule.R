@@ -28,11 +28,13 @@ plotGeoInc <- function(df){
     geom_point(aes(color=df$complete)) +
     geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name')+
     ggtitle("Incidence") +
-    theme(strip.text.x = element_text(size = 12))+
+    theme(text = element_text(size = 15))+
     ylab(sprintf("%s per 100 k","Incidence"))+
     xlab(sprintf("%s", "period"))+
     labs(color="complete")
 }
+
+
 
 #' @title display mortality plots arranged as Germany
 #' @description display incidence for each state, arranged as germany.
@@ -44,33 +46,51 @@ plotGeoMort <- function(df){
     geom_point(aes(color=df$complete)) +
     geofacet::facet_geo(~ FedState, grid = 'de_states_grid1', label='name') +
     ggtitle("Mortality") +
-    theme(strip.text.x = element_text(size = 12)) +
+    theme(text = element_text(size = 15))+
     ylab(sprintf("%s per 100 k","mortality")) +
     xlab(sprintf("%s", "period")) +
     labs(color="complete")
 }
-
 ##-------------------------------------module---------------------------------##
 geoAnalysisUI <- function(id) {
   fluidPage(
     fluidRow(
-      column(width=8,
-             selectInput(NS(id,"vary"),
-                "Select a y-variable",
-                choices=c("incidence","mortality"))),
+      column(width=8, align='left',
+             downloadButton(NS(id, 'downloadInc'),'Download Incidence Plot')),
       column(width=4, align='right',
            htmlOutput(NS(id,"hei")))),
     plotOutput(NS(id,"inc")),
-    plotOutput(NS(id,"mort"))
+    fluidRow(
+      column(width=8, align='left',
+             downloadButton(NS(id, 'downloadMort'),'Download Mortality Plot'))),
+    plotOutput(NS(id,"mort")),
   )
 }
 
 geoAnalysisServer <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     output$hei<- renderText(paste('<B>data:</B> ',choice()))
+
     df <- reactive(
       sumOverGroups(data()))
-    output$inc <- renderPlot(plotGeoInc(df()))
-    output$mort <- renderPlot(plotGeoMort(df()))
-  })
+
+
+    incplot  <- reactive(plotGeoInc(df()))
+    mortplot <- reactive(plotGeoMort(df()))
+
+    output$inc <- renderPlot(incplot())
+    output$mort <- renderPlot(mortplot())
+
+    output$downloadInc <- downloadHandler(
+      filename = function(){'test.pdf'},
+      content = function(file){ggsave(file, plot=incplot(), width=12, height=7, units="in")}
+    )
+    output$downloadMort <- downloadHandler(
+      filename = function(){'test.pdf'},
+      content = function(file){ggsave(file, plot=mortplot(), width=12, height=7, units="in")}
+    )
+    })
 }
+
+
+
