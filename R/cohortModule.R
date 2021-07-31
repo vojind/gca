@@ -2,7 +2,6 @@
 #' @title convert agegroups
 #' @description convert agegroups to median integer
 #' @param string age group string to be converted to an int
-
 convertInterval <- function(string){
   string <- as.character(string)
   chars <- strsplit(string,' ')[[1]]
@@ -33,20 +32,24 @@ tweakCohortData <- function(data, fstate){
 #' @export
 plotCohortInc <- function(df){
   one <-
-    ggplot(df, aes(birthYear, y=incPer100k, colour=age)) +
+    ggplot(df, aes(birthYear, y=incRate, colour=age)) +
     geom_line() +
     theme_bw() +
     ylab('Incidence rate per 100,000 persons') +
     xlab('Year of Birth') +
     xlim(1915,1965)+
+    labs(colour="median age") +
+    theme(text = element_text(size = 15))+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
 
   two <-
-    ggplot(df, aes(period, y=incPer100k, colour=age)) +
+    ggplot(df, aes(period, y=incRate, colour=age)) +
     geom_line() +
     theme_bw() +
     ylab('Incidence rate per 100,000 persons')+
-    xlab('Year of Death') +
+    xlab('Year of Incidence') +
+    labs(colour="median age") +
+    theme(text = element_text(size = 15))+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
   gridExtra::grid.arrange(one, two, ncol=2)}
 
@@ -56,20 +59,24 @@ plotCohortInc <- function(df){
 #' @export
 plotCohortMort <- function(df){
   three <-
-    ggplot(df, aes(birthYear, y=mortPer100k, colour=age)) +
+    ggplot(df, aes(birthYear, y=mortRate, colour=age)) +
     geom_line() +
     theme_bw() +
     ylab('Mortality rate per 100,000 persons') +
     xlab('Year of Birth')+
+    labs(colour="median age") +
     xlim(1915,1965)+
+    theme(text = element_text(size = 15))+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
 
   four <-
-    ggplot(df, aes(period, y=mortPer100k, colour=age)) +
+    ggplot(df, aes(period, y=mortRate, colour=age)) +
     geom_line() +
     theme_bw() +
     ylab('Mortality per 100,000 persons')+
     xlab('Year of Death')+
+    labs(colour="median age") +
+    theme(text = element_text(size = 15))+
     directlabels::geom_dl(aes(label = age), method = list(directlabels::dl.trans(x = x + 0.2), "last.points", cex = 0.8))
 
   gridExtra::grid.arrange(three, four, ncol=2)
@@ -78,16 +85,15 @@ plotCohortMort <- function(df){
 ###--------------module functions--------------######
 
 cohortPlotUI <- function(id) {
-  states <-
-    c("ALL","BB","BE","BW","BY","HB","HE","HH","MV",
-      "NI","NW","RP","SH","SL","SN","ST","TH")
   fluidPage(
     fluidRow(
-    column(width=6,
+    column(width=4,
            selectInput(NS(id,"state"),
                        "Select a state",
                        choices=states)),
-    column(width=6, align='right',
+    column(width=4, align='centre',
+           textOutput(NS(id,"all"))),
+    column(width=4, align='right',
            htmlOutput(NS(id,"hei")))),
     fluidRow(downloadButton(NS(id, 'downloadInc'),'Download Incidence Plot')),
     plotOutput(NS(id,"inc")),
@@ -103,19 +109,20 @@ cohortPlotServer <- function(id, data) {
     df <- reactive(
       tweakCohortData(data(),input$state))
 
-    incplott  <- reactive(plotCohortInc(df()))
-    mortplott <- reactive(plotCohortMort(df()))
+    incplot  <- reactive(plotCohortInc(df()))
+    mortplot <- reactive(plotCohortMort(df()))
 
-    output$inc <- renderPlot(incplott())
-    output$mort <- renderPlot(mortplott())
+    output$inc <- renderPlot(incplot())
+    output$mort <- renderPlot(mortplot())
 
     output$downloadInc <- downloadHandler(
       filename = function(){'cohortInc.pdf'},
-      content = function(file){ggsave(file, plot=incplott(), width=12, height=6, units="in")}
+      content = function(file){ggsave(file, plot=incplot(), width=12, height=6, units="in")}
     )
     output$downloadMort <- downloadHandler(
       filename = function(){'cohortMort.pdf'},
-      content = function(file){ggsave(file, plot=mortplott(), width=12, height=6, units="in")}
+      content = function(file){ggsave(file, plot=mortplot(), width=12, height=6, units="in")}
     )
+    output$all <- renderText("*Only the eight states with complete data in the period 2001 to 2014 are included")
   })
   }

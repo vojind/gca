@@ -142,7 +142,6 @@ cleanAndCombine <- function(incFile,popFile,mortFile){
     }
     curr %<>% mutate_if(is.numeric,as.integer)
     curr %<>% mutate_if(is.character,as.factor)
-    #currList[[i]] <- checkValidity(curr, readReg())
     currList[[i]] <- checkValidity(curr, registry)
   }
   return(currList)

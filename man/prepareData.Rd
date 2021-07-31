@@ -4,12 +4,12 @@
 \alias{prepareData}
 \title{prepareData}
 \usage{
-prepareData(df, fstate = "ALL")
+prepareData(df, fstate = "ALL*")
 }
 \arguments{
 \item{df}{dataframe to prepare}
 
-\item{fstate}{federalstate, defaults to ALL}
+\item{fstate}{federalstate, defaults to ALL*}
 }
 \value{
 cleaned dataframe

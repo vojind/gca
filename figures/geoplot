@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script type="application/shiny-singletons"></script>
+  <script type="application/html-dependencies">json2[2014.02.04];jquery[3.5.1];shiny[1.5.0];bootstrap[3.4.1];selectize[0.11.2];htmlwidgets[1.5.3];datatables-css[0.0.0];datatables-binding[0.18];crosstalk[1.1.0.1];font-awesome[5.13.0]</script>
+<script src="shared/json2-min.js"></script>
+<script src="shared/jquery.min.js"></script>
+<link href="shared/shiny.css" rel="stylesheet" />
+<script src="shared/shiny.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="shared/bootstrap/js/bootstrap.min.js"></script>
+<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
+<script src="shared/bootstrap/shim/respond.min.js"></script>
+<link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+<script src="shared/selectize/js/es5-shim.min.js"></script>
+<![endif]-->
+<script src="shared/selectize/js/selectize.min.js"></script>
+<script src="htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="datatables-binding-0.18/datatables.js"></script>
+<link href="crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="font-awesome-5.13.0/css/all.min.css" rel="stylesheet" />
+<link href="font-awesome-5.13.0/css/v4-shims.min.css" rel="stylesheet" />  <title>german cancer</title>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <span class="navbar-brand">german cancer</span>
+      </div>
+      <ul class="nav navbar-nav" data-tabsetid="1345">
+        <li class="active">
+          <a href="#tab-1345-1" data-toggle="tab" data-value="choose data">choose data</a>
+        </li>
+        <li>
+          <a href="#tab-1345-2" data-toggle="tab" data-value="explore data">explore data</a>
+        </li>
+        <li>
+          <a href="#tab-1345-3" data-toggle="tab" data-value="geographic analysis">geographic analysis</a>
+        </li>
+        <li>
+          <a href="#tab-1345-4" data-toggle="tab" data-value="cohort analysis">cohort analysis</a>
+        </li>
+        <li>
+          <a href="#tab-1345-5" data-toggle="tab" data-value="agegroup analysis">agegroup analysis</a>
+        </li>
+        <li>
+          <a href="#tab-1345-6" data-toggle="tab" data-value="agegroup histograms">agegroup histograms</a>
+        </li>
+        <li>
+          <a href="#tab-1345-7" data-toggle="tab" data-value="age standardized analysis">age standardized analysis</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="tab-content" data-tabsetid="1345">
+      <div class="tab-pane active" data-value="choose data" id="tab-1345-1">
+        <div class="container-fluid">
+          <div id="tab0-dataOld" class="form-group shiny-input-radiogroup shiny-input-container">
+            <label class="control-label" for="tab0-dataOld">choose from existing data</label>
+            <div class="shiny-options-group">
+              <div class="radio">
+                <label>
+                  <input type="radio" name="tab0-dataOld" value="prostate" checked="checked"/>
+                  <span>prostate</span>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="tab0-dataOld" value="breast"/>
+                  <span>breast</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div id="tab0-which" class="form-group shiny-input-radiogroup shiny-input-container">
+            <label class="control-label" for="tab0-which">Use uploaded or existing data set?</label>
+            <div class="shiny-options-group">
+              <div class="radio">
+                <label>
+                  <input type="radio" name="tab0-which" value="uploaded"/>
+                  <span>uploaded</span>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="tab0-which" value="existing" checked="checked"/>
+                  <span>existing</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group shiny-input-container" style="width: 30%;">
+            <label class="control-label" for="upload1">incidence</label>
+            <div class="input-group">
+              <label class="input-group-btn input-group-prepend">
+                <span class="btn btn-default btn-file">
+                  Browse...
+                  <input id="upload1" name="upload1" type="file" style="display: none;"/>
+                </span>
+              </label>
+              <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+            </div>
+            <div id="upload1_progress" class="progress active shiny-file-input-progress">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+          <div class="form-group shiny-input-container" style="width: 30%;">
+            <label class="control-label" for="upload2">population</label>
+            <div class="input-group">
+              <label class="input-group-btn input-group-prepend">
+                <span class="btn btn-default btn-file">
+                  Browse...
+                  <input id="upload2" name="upload2" type="file" style="display: none;"/>
+                </span>
+              </label>
+              <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+            </div>
+            <div id="upload2_progress" class="progress active shiny-file-input-progress">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+          <div class="form-group shiny-input-container" style="width: 30%;">
+            <label class="control-label" for="upload3">mortality</label>
+            <div class="input-group">
+              <label class="input-group-btn input-group-prepend">
+                <span class="btn btn-default btn-file">
+                  Browse...
+                  <input id="upload3" name="upload3" type="file" style="display: none;"/>
+                </span>
+              </label>
+              <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+            </div>
+            <div id="upload3_progress" class="progress active shiny-file-input-progress">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+          <button id="submit" type="button" class="btn btn-default action-button">Submit</button>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="explore data" id="tab-1345-2">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="tab1-state">Select a state</label>
+                <div>
+                  <select id="tab1-state"><option value="ALL" selected>ALL</option>
+<option value="BB">BB</option>
+<option value="BE">BE</option>
+<option value="BW">BW</option>
+<option value="BY">BY</option>
+<option value="HB">HB</option>
+<option value="HE">HE</option>
+<option value="HH">HH</option>
+<option value="MV">MV</option>
+<option value="NI">NI</option>
+<option value="NW">NW</option>
+<option value="RP">RP</option>
+<option value="SH">SH</option>
+<option value="SL">SL</option>
+<option value="SN">SN</option>
+<option value="ST">ST</option>
+<option value="TH">TH</option></select>
+                  <script type="application/json" data-for="tab1-state" data-nonempty="">{}</script>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6" align="right">
+              <div id="tab1-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div id="tab1-explore" style="width:100%; height:auto; " class="datatables html-widget html-widget-output"></div>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="geographic analysis" id="tab-1345-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-8" align="left">
+              <a id="tab2-download" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+                <i class="fa fa-download"></i>
+                Download Plot
+              </a>
+            </div>
+            <div class="col-sm-4" align="right">
+              <div id="tab2-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8" align="center">
+              <div id="tab2-plot" class="shiny-plot-output" style="width: 100% ; height: 700px"></div>
+            </div>
+            <div class="col-sm-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="cohort analysis" id="tab-1345-4">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="tab3-state">Select a state</label>
+                <div>
+                  <select id="tab3-state"><option value="ALL*" selected>ALL*</option>
+<option value="BB">BB</option>
+<option value="BE">BE</option>
+<option value="BW">BW</option>
+<option value="BY">BY</option>
+<option value="HB">HB</option>
+<option value="HE">HE</option>
+<option value="HH">HH</option>
+<option value="MV">MV</option>
+<option value="NI">NI</option>
+<option value="NW">NW</option>
+<option value="RP">RP</option>
+<option value="SH">SH</option>
+<option value="SL">SL</option>
+<option value="SN">SN</option>
+<option value="ST">ST</option>
+<option value="TH">TH</option></select>
+                  <script type="application/json" data-for="tab3-state" data-nonempty="">{}</script>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" align="centre">
+              <div id="tab3-all" class="shiny-text-output"></div>
+            </div>
+            <div class="col-sm-4" align="right">
+              <div id="tab3-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div class="row">
+            <a id="tab3-downloadInc" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+              <i class="fa fa-download"></i>
+              Download Incidence Plot
+            </a>
+          </div>
+          <div id="tab3-inc" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+          <div class="row">
+            <a id="tab3-downloadMort" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+              <i class="fa fa-download"></i>
+              Download Mortality Plot
+            </a>
+          </div>
+          <div id="tab3-mort" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="agegroup analysis" id="tab-1345-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="tab4-state">Select a state</label>
+                <div>
+                  <select id="tab4-state"><option value="ALL*" selected>ALL*</option>
+<option value="BB">BB</option>
+<option value="BE">BE</option>
+<option value="BW">BW</option>
+<option value="BY">BY</option>
+<option value="HB">HB</option>
+<option value="HE">HE</option>
+<option value="HH">HH</option>
+<option value="MV">MV</option>
+<option value="NI">NI</option>
+<option value="NW">NW</option>
+<option value="RP">RP</option>
+<option value="SH">SH</option>
+<option value="SL">SL</option>
+<option value="SN">SN</option>
+<option value="ST">ST</option>
+<option value="TH">TH</option></select>
+                  <script type="application/json" data-for="tab4-state" data-nonempty="">{}</script>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" align="centre">
+              <div id="tab4-all" class="shiny-text-output"></div>
+            </div>
+            <div class="col-sm-4" align="right">
+              <div id="tab4-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div class="row">
+            <a id="tab4-downloadPlot" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+              <i class="fa fa-download"></i>
+              Download Plot
+            </a>
+          </div>
+          <div id="tab4-plot" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+          <div class="row">
+            <a id="tab4-downloadPlot2" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+              <i class="fa fa-download"></i>
+              Download Plot
+            </a>
+          </div>
+          <div id="tab4-plot2" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="agegroup histograms" id="tab-1345-6">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6" align="left">
+              <a id="tab5-downloadPlot" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+                <i class="fa fa-download"></i>
+                Download Plot
+              </a>
+            </div>
+            <div class="col-sm-6" align="right">
+              <div id="tab5-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div id="tab5-plot" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+        </div>
+      </div>
+      <div class="tab-pane" data-value="age standardized analysis" id="tab-1345-7">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="tab6-state">Select a state</label>
+                <div>
+                  <select id="tab6-state"><option value="ALL*" selected>ALL*</option>
+<option value="BB">BB</option>
+<option value="BE">BE</option>
+<option value="BW">BW</option>
+<option value="BY">BY</option>
+<option value="HB">HB</option>
+<option value="HE">HE</option>
+<option value="HH">HH</option>
+<option value="MV">MV</option>
+<option value="NI">NI</option>
+<option value="NW">NW</option>
+<option value="RP">RP</option>
+<option value="SH">SH</option>
+<option value="SL">SL</option>
+<option value="SN">SN</option>
+<option value="ST">ST</option>
+<option value="TH">TH</option></select>
+                  <script type="application/json" data-for="tab6-state" data-nonempty="">{}</script>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" align="centre">
+              <div id="tab6-all" class="shiny-text-output"></div>
+            </div>
+            <div class="col-sm-4" align="right">
+              <div id="tab6-hei" class="shiny-html-output"></div>
+            </div>
+          </div>
+          <div class="row">
+            <a id="tab6-downloadPlot" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+              <i class="fa fa-download"></i>
+              Download Plot
+            </a>
+          </div>
+          <div id="tab6-plot" class="shiny-plot-output" style="width: 100% ; height: 400px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,23 +1,4 @@
-#' @title european standard weights
-#' @description european standard weight for age standardized analysis
-weights <- list(
-  "0 - 14" = 0.16,
-  "15 - 19" = 0.055,
-  "20 - 24" = 0.06,
-  "25 - 29" = 0.06,
-  "30 - 34" = 0.065,
-  "35 - 39" = 0.7,
-  "40 - 44" = 0.7,
-  "45 - 49" = 0.7,
-  "50 - 54" = 0.7,
-  "55 - 59" = 0.065,
-  "60 - 64" = 0.06,
-  "65 - 69" = 0.055,
-  "70 - 74" = 0.05,
-  "75 - 79" = 0.04,
-  "80 - 84" = 0.025,
-  "85 plus" = 0.025
-)
+
 
 #' @title Prepare data for age standardized analysis
 #' @description Prepares data for age standardized analysis.
@@ -30,27 +11,27 @@ weights <- list(
 tweakAsisData <- function(data, fstate){
   years <- getCompleteYears(fstate)
   df <- prepareData(data, fstate)
-  df <- subset(df, years[1] <= period & period <= years[2])
-  df$newIncRate <- with(df, incPer100k*as.numeric(weights[as.character(agegroup)]))
-  df$newMortRate <- with(df, mortPer100k*as.numeric(weights[as.character(agegroup)]))
   df <- as.data.frame(dplyr::summarise(group_by(df,
-                                   period = period),
-                          newIncRate = sum(newIncRate),
-                          newMortRate = sum(newMortRate)))
+                                                period = period),
+                                       incRate = sum(incRate),
+                                       mortRate = sum(mortRate)))
   return(df)}
+
 
 
 #' @title plot age standardized analysis
 #' @description plots age standardized analysis
 #' @param df dataframe
-plotAsis <- function(df){
+plotAsis <- function(df,fstate){
   ggplot(df, aes(x=period)) +
-    geom_line(aes(y=newIncRate, colour='incidence rate')) +
-    geom_line(aes(y=newMortRate, colour='mortality rate')) +
+    geom_line(aes(y=incRate, colour='incidence rate')) +
+    geom_line(aes(y=mortRate, colour='mortality rate')) +
     theme_bw() +
     theme(legend.title = element_blank()) +
+    theme(text = element_text(size = 15))+
     ylab('Age standardized rates per 100,000 persons') +
-    xlab('period')
+    xlab('period') +
+    geom_vline(xintercept=getCompleteYears(fstate), linetype=2)
 }
 
 
@@ -62,13 +43,15 @@ asisPlotUI <- function(id) {
       "NI","NW","RP","SH","SL","SN","ST","TH")
   fluidPage(
     fluidRow(
-      column(width=6,
+      column(width=8,
              selectInput(NS(id,"state"),
                          "Select a state",
                          choices=states)),
-      column(width=6, align='right',
+      column(width=4, align='right',
              htmlOutput(NS(id,"hei")))),
-    plotOutput(NS(id,"inc")),
+    fluidRow(downloadButton(NS(id, 'downloadPlot'),'Download Plot')),
+    plotOutput(NS(id,"plot")),
+
   )
 }
 
@@ -78,6 +61,15 @@ asisPlotServer <- function(id, data) {
     output$hei<- renderText(paste('<B>data:</B> ',choice()))
     df <- reactive(
       tweakAsisData(data(),input$state))
-    output$inc <- renderPlot(plotAsis(df()))
+    plotVar <- reactive(plotAsis(df(),input$state))
+    output$plot <- renderPlot(plotVar())
+    output$downloadPlot <- downloadHandler(
+      filename = function(){'asis.pdf'},
+      content = function(file){ggsave(file, plot=plotVar(), width=12, height=6, units = "in")}
+    )
+
+    #output$all <- renderText("*Only the eight states with complete data in the period 2001 to 2014 are included")
   })
 }
+install.packages("BAPC", repos = "http://R-Forge.R-project.org")
+

@@ -7,7 +7,7 @@
 getCompleteYears(fstate)
 }
 \arguments{
-\item{fstate}{federal state, defaults to 'ALL'}
+\item{fstate}{federal state, defaults to 'ALL*'}
 }
 \value{
 two integers, indicating start and end of validated/complete period

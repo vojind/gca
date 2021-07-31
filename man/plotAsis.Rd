@@ -4,7 +4,7 @@
 \alias{plotAsis}
 \title{plot age standardized analysis}
 \usage{
-plotAsis(df)
+plotAsis(df, fstate)
 }
 \arguments{
 \item{df}{dataframe}

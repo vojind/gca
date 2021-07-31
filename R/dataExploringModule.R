@@ -11,18 +11,17 @@ dataFeedbackUI <- function(id) {
       column(width=6, align='right',
              htmlOutput(NS(id,"hei")))
       ),
-
     DT::DTOutput(NS(id, "explore"))
   )
 }
 
-dataFeedbackServer <- function(id, data) {
+dataFeedbackServer <- function(id, datta) {
   moduleServer(id, function(input, output, session) {
     output$hei<- renderText(paste('<B>data:</B> ',choice()))
     output$explore <-
       DT::renderDT(server=FALSE,{
-        DT::datatable(if(input$state == "ALL"){data()}
-                  else{stateData <- reactive(subset(data(),FedState == input$state))
+        DT::datatable(if(input$state == "ALL"){datta()}
+                  else{stateData <- reactive(subset(datta(),FedState == input$state))
                   stateData()},
                   extensions = 'Buttons', options = list(
                     dom = 'Bfrtip',
