@@ -2,7 +2,6 @@
 
 export(cleanAndCombine)
 export(gcaApp)
-export(nordpred)
 export(plotAgGrid)
 export(plotAgMortPerInc)
 export(plotCohortInc)
