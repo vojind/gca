@@ -10,7 +10,7 @@ dataChoiceUI <- function(id) {
                  selected= "existing"))),
     fluidRow(column(width=12, align="center",
                     radioButtons(NS(id,"dataOld"), "Choose from existing data",
-                 choices=c("prostate", "breast", "trachea")))),
+                 choices=c("prostate", "breast", "lung")))),
     fluidRow(width=12, align="center",htmlOutput(NS(id,"hei"))),
 
     column(width=12, align="center",

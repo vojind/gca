@@ -6,7 +6,7 @@
 #' @export
 "breast"
 
-#' @title trachea
+#' @title lung
 #' @description cleaned and ready data frame for lung cancer
 #' @format A list containing two data frames, one for for women and for men
 #' @export
