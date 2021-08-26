@@ -7,8 +7,15 @@
 plotAsis(df, fstate)
 }
 \arguments{
-\item{df}{dataframe}
+\item{df}{dataframe, prepared using tweakAsisData}
+
+\item{fstate}{specifying federal state}
 }
 \description{
 plots age standardized analysis
+}
+\examples{
+prostate <- cancerData[['prostate']][[1]]
+data <- tweakAsisData(prostate,'SL')
+plotAsis(data,'SL')
 }

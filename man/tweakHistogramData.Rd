@@ -14,5 +14,12 @@ dataframe ready for plotting
 }
 \description{
 prepares data frame for histogram plotting.
-Selects only complete data and then sums over agegroups
+Selects only complete data and then sums over agegroups. Returns df
+with federal state, incidence, mortality, population, and two
+columns for coloring in histogram
+}
+\examples{
+prostate <- removeNans(cancerData[['prostate']][[1]])
+data <- tweakHistogramData(prostate)
+histogramPlotter(data)
 }

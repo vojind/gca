@@ -2,16 +2,20 @@
 % Please edit documentation in R/utility.R
 \name{removeNans}
 \alias{removeNans}
-\title{Removing NaN values}
+\title{Removing NaN values for complete column}
 \usage{
 removeNans(df)
 }
 \arguments{
-\item{df}{The data frame whose Nan values are set to False}
+\item{df}{The data frame whose NaN values are set to False}
 }
 \value{
-The dataframe
+The dataframe without NaN.
 }
 \description{
-Nans in the complete/available columns are set to FALSE.
+NaNs in the complete/available columns are set to FALSE.
+}
+\examples{
+prostate <- cancerData[['prostate']][[1]]
+removeNans(prostate)
 }

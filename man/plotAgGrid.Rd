@@ -2,15 +2,25 @@
 % Please edit documentation in R/ageGroupAnalysis.R
 \name{plotAgGrid}
 \alias{plotAgGrid}
-\title{plot age group plot}
+\title{Plot age-stratified plot}
 \usage{
 plotAgGrid(df, fstate)
 }
 \arguments{
-\item{df}{dataframe}
+\item{df}{the cleaned dataframe, for example from the provided list cancerData}
 
-\item{fstate}{federal state}
+\item{fstate}{specify federalstate, two-letters abbrevations, see variable states}
+}
+\value{
+
 }
 \description{
-figure with separate plot for each data frame, plotting incidence or mortality against period
+Plots age-stratified plot, both incidence and mortality rates.
+For one specific state or all states aggregated.
+}
+\examples{
+prostateDf <- cancerData[['prostate']][[1]]
+prostateDf <- removeNans(prostateDf)
+df <- prepareData(df=prostateDf,fstate='SL')
+plotAgGrid(df=df,fstate='SL')
 }

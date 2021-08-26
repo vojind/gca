@@ -2,7 +2,7 @@
 % Please edit documentation in R/ageStandardizedAnalysis.R
 \name{tweakAsisData}
 \alias{tweakAsisData}
-\title{Prepare data for age standardized analysis}
+\title{Data preparation II}
 \usage{
 tweakAsisData(data, fstate)
 }
@@ -12,10 +12,14 @@ tweakAsisData(data, fstate)
 \item{fstate}{specifying federal state}
 }
 \value{
-prepared data frame, ready for age standardized analysis
+prepared data frame, ready for further analyses
 }
 \description{
 Prepares data for age standardized analysis.
-Pretty similar to prepareData(), except for a few things.
-Makes two new columns for the reweigheted incidence and mortality rates
+Resembles prepareData(). Final dataframe only has period, incRate and mortRate
+}
+\examples{
+prostate <- cancerData[['prostate']][[1]]
+data <- tweakAsisData(prostate,'SL')
+plotAsis(data,'SL')
 }

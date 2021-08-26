@@ -13,3 +13,8 @@ histogramPlotter(df)
 plots histogram for each federal state. x-variable is agegroup and y-variable is
 incidence- and mortality rate
 }
+\examples{
+prostate <- removeNans(cancerData[['prostate']][[1]])
+data <- tweakHistogramData(prostate)
+histogramPlotter(data)
+}

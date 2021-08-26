@@ -2,15 +2,25 @@
 % Please edit documentation in R/ageGroupAnalysis.R
 \name{plotAgMortPerInc}
 \alias{plotAgMortPerInc}
-\title{plot age group plot}
+\title{Plot age-stratified plot, ratio incidence to mortality}
 \usage{
 plotAgMortPerInc(df, fstate)
 }
 \arguments{
-\item{df}{dataframe}
+\item{df}{the cleaned dataframe, for example from the provided list cancerData}
 
-\item{fstate}{federal state}
+\item{fstate}{specify federalstate, two-letters abbrevations, see variable states}
+}
+\value{
+
 }
 \description{
-figure with separate plot for each data frame, plotting mortality divided by incidence against period
+Plots age-stratified plot of the ratio of incidence to mortality.
+For one specific state or all states aggregated.
+}
+\examples{
+prostateDf <- cancerData[['prostate']][[1]]
+prostateDf <- removeNans(prostateDf)
+df <- prepareData(df=prostateDf,fstate='SL')
+plotAgMortPerInc(df=df,fstate='SL')
 }

@@ -1,8 +1,20 @@
-#' @title plot age group plot
-#' @description figure with separate plot for each data frame, plotting incidence or mortality against period
-#' @param df dataframe
-#' @param fstate federal state
+
+#' Plot age-stratified plot
+#' @description
+#' Plots age-stratified plot, both incidence and mortality rates.
+#' For one specific state or all states aggregated.
+#'
+#' @param df the cleaned dataframe, for example from the provided list cancerData
+#' @param fstate specify federalstate, two-letters abbrevations, see variable states
+#'
+#' @return
 #' @export
+#'
+#' @examples
+#' prostateDf <- cancerData[['prostate']][[1]]
+#' prostateDf <- removeNans(prostateDf)
+#' df <- prepareData(df=prostateDf,fstate='SL')
+#' plotAgGrid(df=df,fstate='SL')
 plotAgGrid <- function(df, fstate){
   colors <- c("incidence" = "blue", "mortality" = "red", "complete" = "black")
   ggplot(df, aes(x=period)) +
@@ -15,11 +27,22 @@ plotAgGrid <- function(df, fstate){
     geom_vline(xintercept=getCompleteYears(fstate), linetype=2)
 }
 
-#' @title plot age group plot
-#' @description figure with separate plot for each data frame, plotting mortality divided by incidence against period
-#' @param df dataframe
-#' @param fstate federal state
+#' Plot age-stratified plot, ratio incidence to mortality
+#' @description
+#' Plots age-stratified plot of the ratio of incidence to mortality.
+#' For one specific state or all states aggregated.
+#'
+#' @param df the cleaned dataframe, for example from the provided list cancerData
+#' @param fstate specify federalstate, two-letters abbrevations, see variable states
+#'
+#' @return
 #' @export
+#'
+#' @examples
+#' prostateDf <- cancerData[['prostate']][[1]]
+#' prostateDf <- removeNans(prostateDf)
+#' df <- prepareData(df=prostateDf,fstate='SL')
+#' plotAgMortPerInc(df=df,fstate='SL')
 plotAgMortPerInc <- function(df, fstate){
   ggplot(df, aes(x=period)) +
     geom_line(aes(y=mortRate/incRate, color = "mortality/incidence"), size = 1, alpha = 0.7) +

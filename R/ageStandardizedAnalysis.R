@@ -1,13 +1,15 @@
 
 
-#' @title Prepare data for age standardized analysis
+#' @title Data preparation II
 #' @description Prepares data for age standardized analysis.
-#' Pretty similar to prepareData(), except for a few things.
-#' Makes two new columns for the reweigheted incidence and mortality rates
+#' Resembles prepareData(). Final dataframe only has period, incRate and mortRate
 #' @param data data frame for preparation
 #' @param fstate specifying federal state
-#' @return prepared data frame, ready for age standardized analysis
-
+#' @return prepared data frame, ready for further analyses
+#' @examples
+#' prostate <- cancerData[['prostate']][[1]]
+#' data <- tweakAsisData(prostate,'SL')
+#' plotAsis(data,'SL')
 tweakAsisData <- function(data, fstate){
   years <- getCompleteYears(fstate)
   df <- prepareData(data, fstate)
@@ -21,7 +23,12 @@ tweakAsisData <- function(data, fstate){
 
 #' @title plot age standardized analysis
 #' @description plots age standardized analysis
-#' @param df dataframe
+#' @param df dataframe, prepared using tweakAsisData
+#' @param fstate specifying federal state
+#' @examples
+#' prostate <- cancerData[['prostate']][[1]]
+#' data <- tweakAsisData(prostate,'SL')
+#' plotAsis(data,'SL')
 plotAsis <- function(df,fstate){
   ggplot(df, aes(x=period)) +
     geom_line(aes(y=incRate, colour='incidence rate')) +
@@ -67,8 +74,6 @@ asisPlotServer <- function(id, data) {
       filename = function(){'asis.pdf'},
       content = function(file){ggsave(file, plot=plotVar(), width=12, height=6, units = "in")}
     )
-
-    #output$all <- renderText("*Only the eight states with complete data in the period 2001 to 2014 are included")
   })
 }
 install.packages("BAPC", repos = "http://R-Forge.R-project.org")

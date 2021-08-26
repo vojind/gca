@@ -2,10 +2,13 @@
 % Please edit documentation in R/app.R
 \name{gcaApp}
 \alias{gcaApp}
-\title{Runs the shiny application}
+\title{Run shiny application}
 \usage{
 gcaApp()
 }
 \description{
-Runs the shiny application
+Run shiny application
+}
+\examples{
+gcaApp()
 }

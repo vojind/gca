@@ -7,11 +7,14 @@
 getCompleteYears(fstate)
 }
 \arguments{
-\item{fstate}{federal state, defaults to 'ALL*'}
+\item{fstate}{federal state}
 }
 \value{
-two integers, indicating start and end of validated/complete period
+two integers, indicating start and end of complete period
 }
 \description{
 get years for which the specified federal state have complete data
+}
+\examples{
+getCompleteYears('SL')
 }

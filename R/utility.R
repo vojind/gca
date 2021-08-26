@@ -27,13 +27,17 @@ states <<- c("ALL","BB","BE","BW","BY","HB","HE","HH","MV",
 #' @title complete states
 #' @description when aggregating data over states, only these states are used.
 #' These have complete data from 2001 to 2014.
+#' @export
 completeStates <<- c("SH","HH","HB","SL","BB","MV","SN","TH")
 
-#' @title Removing NaN values
-#' @description Nans in the complete/available columns are set to FALSE.
-#' @param df The data frame whose Nan values are set to False
-#' @return The dataframe
+#' @title Removing NaN values for complete column
+#' @description NaNs in the complete/available columns are set to FALSE.
+#' @param df The data frame whose NaN values are set to False
+#' @return The dataframe without NaN.
 #' @export
+#' @examples
+#' prostate <- cancerData[['prostate']][[1]]
+#' removeNans(prostate)
 
 removeNans <- function(df){
   nans <- is.na(df$complete)
@@ -41,22 +45,24 @@ removeNans <- function(df){
   return(df)
 }
 
-#' @title prepareData
-#' @description prepares data by choosing fedState or summing over fedState. Also calculates values per capita
+#' @title Prepare Data
+#' @description prepares data by choosing fedState or summing over fedState.
+#' Also calculates values per capita, incidence rate and mortality rate
 #' @param df dataframe to prepare
-#' @param fstate federalstate, defaults to ALL*
+#' @param fstate federalstate, defaults to ALL
 #' @return cleaned dataframe
 #' @export
+#' @examples
+#' prostate <- removeNans(cancerData[['prostate']][[1]])
+#' prepareData(prostate,"ALL")
 
-#agegroup analysis ***
-prepareData <- function(df, fstate = "ALL*"){
+prepareData <- function(df, fstate = "ALL"){
   if(!(fstate %in% c("ALL*", "ALL"))){
     df <- subset(df, FedState == fstate)
     df$incRate <- with(df, incidence*(1e5/population)*as.numeric(weights[as.character(agegroup)]))
     df$mortRate <- with(df, mortality*(1e5/population)*as.numeric(weights[as.character(agegroup)]))
   }
   else{
-    #_-----------------------------___#
     df <- subset(df, FedState %in% completeStates)
     df <- dplyr::summarise(dplyr::group_by(df,
                                            agegroup = agegroup,
@@ -72,8 +78,10 @@ prepareData <- function(df, fstate = "ALL*"){
 
 #' @title complete years for federal state
 #' @description get years for which the specified federal state have complete data
-#' @param fstate federal state, defaults to 'ALL*'
-#' @return two integers, indicating start and end of validated/complete period
+#' @param fstate federal state
+#' @return two integers, indicating start and end of complete period
+#' @export
+#' @examples getCompleteYears('SL')
 getCompleteYears <- function(fstate){
   years <-
     if(fstate %in% c('ALL*',"ALL")) c(2001,2014) else registry[fstate, c('CheckedFrom', 'CheckedTo')]

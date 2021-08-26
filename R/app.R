@@ -1,8 +1,11 @@
 #' @import shiny
 NULL
 
-#' Runs the shiny application
+#' Run shiny application
+#'
 #' @export
+#'
+#' @examples gcaApp()
 gcaApp <- function(){
     ui <- navbarPage("german cancer",
                      tabPanel("choose data", dataChoiceUI("tab0")),

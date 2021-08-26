@@ -2,18 +2,23 @@
 % Please edit documentation in R/utility.R
 \name{prepareData}
 \alias{prepareData}
-\title{prepareData}
+\title{Prepare Data}
 \usage{
-prepareData(df, fstate = "ALL*")
+prepareData(df, fstate = "ALL")
 }
 \arguments{
 \item{df}{dataframe to prepare}
 
-\item{fstate}{federalstate, defaults to ALL*}
+\item{fstate}{federalstate, defaults to ALL}
 }
 \value{
 cleaned dataframe
 }
 \description{
-prepares data by choosing fedState or summing over fedState. Also calculates values per capita
+prepares data by choosing fedState or summing over fedState.
+Also calculates values per capita, incidence rate and mortality rate
+}
+\examples{
+prostate <- removeNans(cancerData[['prostate']][[1]])
+prepareData(prostate,"ALL")
 }

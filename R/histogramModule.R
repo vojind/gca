@@ -1,12 +1,17 @@
 #' @title prepare data for histogram plot
 #' @description prepares data frame for histogram plotting.
-#' Selects only complete data and then sums over agegroups
+#' Selects only complete data and then sums over agegroups. Returns df
+#' with federal state, incidence, mortality, population, and two
+#' columns for coloring in histogram
 #' @param df dataframe
 #' @return dataframe ready for plotting
-
+#' @export
+#' @examples
+#' prostate <- removeNans(cancerData[['prostate']][[1]])
+#' data <- tweakHistogramData(prostate)
+#' histogramPlotter(data)
 tweakHistogramData <- function(df){
   df <- subset(df, complete==T)
-  ##----------------------------------------------##
   df <- as.data.frame(dplyr::summarise(dplyr::group_by(df,
                                                        agegroup = agegroup,
                                                        FedState = FedState),
@@ -15,9 +20,7 @@ tweakHistogramData <- function(df){
                                        population= sum(population)))
   df$incRate <- with(df, incidence*(1e5/population)*as.numeric(weights[as.character(agegroup)]))
   df$mortRate <- with(df, mortality*(1e5/population)*as.numeric(weights[as.character(agegroup)]))
-  #_______________________________________________##
-
-  df <- tidyr::gather(df,key = event, value = total, incRate:mortRate)
+  df <- tidyr::gather(df,key = event, value = value, incRate:mortRate)
   df$event <- plyr::revalue(df$event, c("incRate"="incidence", "mortRate"="mortality"))
   return(df)}
 
@@ -25,9 +28,14 @@ tweakHistogramData <- function(df){
 #' @description plots histogram for each federal state. x-variable is agegroup and y-variable is
 #' incidence- and mortality rate
 #' @param df dataframe
+#' @export
+#' @examples
+#' prostate <- removeNans(cancerData[['prostate']][[1]])
+#' data <- tweakHistogramData(prostate)
+#' histogramPlotter(data)
 histogramPlotter <- function(df){
   library(geofacet)
-  ggplot(df, aes(agegroup, total, fill=event))+
+  ggplot(df, aes(agegroup, value, fill=event))+
     geom_bar(stat = "identity", position = 'dodge')+
     geofacet::facet_geo(~ FedState, grid = geofacet::de_states_grid1, label='name') +
     scale_x_discrete(guide = guide_axis(check.overlap=T)) +
